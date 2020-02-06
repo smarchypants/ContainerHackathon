@@ -1,0 +1,65 @@
+#  Set APP_ENV environment variables by running:
+#  export APP_ENV=dev
+#  docker-compose build
+#  docker-compose up -d
+
+version: '3.3'
+
+services:
+
+    node1:
+        container_name: node1
+        build:
+            context: .
+            dockerfile: docker-node.dockerfile
+        ports:
+            - "9000:3000"
+#        volumes: 
+#            - .: /var/www
+        #working_dir: /var/www
+        env_file: 
+            - ./env/app.${APP_ENV}.env
+        networks: 
+        - cdxp-network
+
+    mongodb:
+        container_name: mongodb
+        image:
+            mongo
+        #build:
+            #context: .
+            #dockerfile: docker-mongo.dockerfile
+        ports:
+            - "27017:27017"
+        env_file: 
+            - ./env/mongo.${APP_ENV}.env
+            - ./env/app.${APP_ENV}.env
+        networks: 
+        - cdxp-network        
+
+    solace-primary:
+      container_name: solace-primary
+      image: solace/solace-pubsub-standard:latest
+      shm_size: 1g
+      ulimits:
+        core: 1
+        nofile:
+          soft: 2448
+          hard: 38048
+      deploy:
+        restart_policy:
+          condition: on-failure
+          max_attempts: 1
+      ports:
+        - '8080:8080'   #SEMP / PubSub+ Manager
+        - '55555:55555' #SMF
+      environment:
+        - username_admin_globalaccesslevel=admin
+        - username_admin_password=admin
+        - system_scaling_maxconnectioncount=100
+      networks: 
+        - cdxp-network 
+
+networks:
+    cdxp-network:
+        driver: bridge

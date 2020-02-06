@@ -80,7 +80,7 @@ docker login
 docker login enerdscr.azurecr.io
 
     # Username: enerdscr
-    # Password:  Login to Azure portal / container regsitry / settings / access keys / password
+    # Password:  TVB+LEY9W8RmwkuilajlGh=1gmp+WYzo
 
 # cd /Users/smarch/Documents/GitHub/Docker/NodeJs
 
