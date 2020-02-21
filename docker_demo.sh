@@ -54,6 +54,9 @@ docker exec -it centos-httpd /bin/bash
 
 docker run -v $(pwd):/home/test -w /home/test  alpine tar czvf test.tar.gz ContactLenses.pdf
 
+# Run a basic linux image on Windows, and map the local c:\docker folder to /home in the container
+docker run -it -v c:\docker:/home alpine
+
 # Remove the container  (skip over, to show removing of *ALL* containers - useful for dev, not so great for prod)
 #  docker rm -f alpine
 
